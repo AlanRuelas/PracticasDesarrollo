@@ -17,17 +17,36 @@
 
                 <p:panel header="Select a service" style="margin-bottom:10px;">
                     <h:panelGrid columns="2" cellpadding="5">
-                        <p:outputLabel for="sucursal" value="Sucursal "/>
-                        <p:selectOneMenu id="sucursal" value="#{pkgBean.selectedBranch}" style="width:150px">
-                            <p:ajax listener="#{pkgBean.onBranchChange}" update="form:servicio"/>
-                            <f:selectItem itemLabel="Select sucursal" itemValue="" noSelectionOption="true"/>
-                            <f:selectItems value="#{pkgBean.branches}" var="branch" itemValue="#{branch}" itemLabel="#{branch.name}" />
+                        <p:outputLabel for="cmbSucursal" value="Sucursal "/>
+                        <p:selectOneMenu 
+                            converter="genericConverter"
+                            id="cmbSucursal" 
+                            value="#{pkgBean.selectedBranch}" 
+                            valueChangeListener="#{pkgBean.onBranchChange}"
+                            style="width:150px" >
+                            <p:ajax 
+                                process="cmbSucursal"  
+                                partialSubmit="true" 
+                                event="valueChange"
+                                update="@form"/>  
+                            <f:selectItem  
+                                itemValue="null" 
+                                itemLabel="Select Branch" /> 
+                            <f:selectItems 
+                                var="branch" 
+                                value="#{pkgBean.branches}"  
+                                itemValue="#{branch}" 
+                                itemLabel="#{branch.name}" />  
+                            <!--
+                            <f:selectItem itemLabel="Select sucursal" itemValue="" noSelectionOption="false"/>
+                            -->
                         </p:selectOneMenu>
 
                         <p:outputLabel for="servicio" value="Servicio: "/>
                         <p:selectOneMenu id="servicio" value="#{pkgBean.selectedService}" style="width:150px">
                             <f:selectItem itemLabel="Select servicio" itemValue="" noSelectionOption="true"/>
-                            <f:selectItems  value="#{pkgBean.services}" var="service" itemValue="#{service}" itemLabel="#{service.type}"/>
+                            <f:selectItems  value="#{pkgBean.services}" var="service" itemValue="#{service}" 
+                                            itemLabel="#{service.type}"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
 
