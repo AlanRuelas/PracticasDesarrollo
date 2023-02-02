@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -13,23 +16,22 @@ import mx.com.pqtx.datos.dto.ServDTO;
 
 @Named("pkgBean")
 @ViewScoped
-public class PkgBean implements Serializable{
-        
+public class PkgBean implements Serializable {
+
     @Inject
     private Enlister enlister;
-    
+
     private List<BranchDTO> branches;
-    private BranchDTO selectedBranch;
-    
+    private BranchDTO selectedBranch = new BranchDTO();
+
     private List<ServDTO> services;
     private ServDTO selectedService;
-    
 
     public PkgBean() {
     }
-    
+
     @PostConstruct
-    public void inicializar(){
+    public void inicializar() {
         this.branches = enlister.enlistBranches();
     }
 
@@ -66,12 +68,28 @@ public class PkgBean implements Serializable{
 
     }
 
-    public void onBranchChange(){
-        System.out.println("selected branch" + this.selectedBranch);
+    public void onBranchChange2() {
+        System.out.println("selectaed branch" + this.selectedBranch.toString());
 
-        if(selectedBranch != null){
+        if (selectedBranch != null) {
             this.services = enlister.enlistServicesByBranch(selectedBranch);
         }
     }
-    
+
+    public void onBranchChange(ValueChangeEvent event) {
+        try {
+            selectedBranch = new BranchDTO();
+            selectedBranch.setName("");
+            if ((((BranchDTO) event.getNewValue()) == null) || ((BranchDTO) event.getNewValue()).getName() == null) {
+            } else {
+                selectedBranch.setName(((BranchDTO) event.getNewValue()).getName());
+            }
+            if (selectedBranch != null) {
+                this.services = enlister.enlistServicesByBranch(selectedBranch);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
